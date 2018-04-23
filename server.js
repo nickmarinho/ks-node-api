@@ -1,13 +1,14 @@
-var express = require('express'),
-  app = express(),
-  port = process.env.PORT || 3000;
+var express = require('express');
+var router = express.Router();
+var app = express();
 
+var home = require('./routes/home');
+app.use('/', home);
+
+var users = require('./routes/users');
+app.use('/users', users);
+
+var port = process.env.PORT || 3000;
 app.listen(port);
 
-module.exports = {
-  create: () => express().set('json spaces', 2),
-  router: require('./routes'),
-  bodyParser: require('./body-parser')
-}
-
-console.log('todo list RESTful API server started on: ' + port);
+console.log('RESTful API server started on port: ' + port);
