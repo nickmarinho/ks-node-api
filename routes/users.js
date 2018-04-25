@@ -31,27 +31,30 @@ router.post('/', function(req, res) {
 });
 
 router.get('/:userId', function(req, res) {
-  // sessionStorage.findById(req.params.userId, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json(user);
-  // });
+  var userId = req.params.userId;
+  var usersData = JSON.parse(fs.readFileSync(usersDbFile, 'utf8'));
+  var userData = getUserById(usersData, userId);
+  res.send(userData);
 
-  let message = 'Reading a user by id: ' + req.params.userId;
-  res.send(message);
+  let message = 'Reading a user by id: ' + userId;
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
 });
 
 router.put('/:userId', function(req, res) {
-  // sessionStorage.findOneAndUpdate({_id: req.params.userId}, req.body, {new: true}, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json(user);
-  // });
+  var userId = req.params.userId;
+  var usersData = JSON.parse(fs.readFileSync(usersDbFile, 'utf8'));
 
-  let message = 'Updating a user id: ' + req.params.userId;
+  for (var d = 1, len = usersData.length; d < len; d += 1) {
+    if (userId.indexOf(usersData[d].id) !== -1) {
+      usersData.splice(d, 1);
+      usersData.push(req.body);
+      fs.writeFileSync(usersDbFile, JSON.stringify(usersData) , 'utf-8');
+    }
+  }
+
+  let message = 'Updating a user id: ' + userId;
   res.send(message);
   console.log(message);
   var msg = log.showDate();
@@ -59,19 +62,29 @@ router.put('/:userId', function(req, res) {
 });
 
 router.delete('/:userId', function(req, res) {
-  // sessionStorage.remove({
-  //   _id: req.params.userId
-  // }, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json({ message: 'user successfully deleted' });
-  // });
+  var userId = req.params.userId;
+  var usersData = JSON.parse(fs.readFileSync(usersDbFile, 'utf8'));
 
-  let message = 'Deleting a user by id: ' + req.params.userId;
+  for (var d = 1, len = usersData.length; d < len; d += 1) {
+    if (userId.indexOf(usersData[d].id) !== -1) {
+      usersData.splice(d, 1);
+      fs.writeFileSync(usersDbFile, JSON.stringify(usersData) , 'utf-8');
+    }
+  }
+
+  let message = 'Deleting a user by id: ' + userId;
   res.send(message);
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
 });
+
+var getUserById = function(usersData, userId) {
+  for (var d = 1, len = usersData.length; d < len; d += 1) {
+    if (Number(usersData[d].id) === Number(userId)) {
+      return usersData[d];
+    }
+  }
+}
 
 module.exports = router;
