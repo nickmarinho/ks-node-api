@@ -44,7 +44,7 @@ router.get('/:userId', function(req, res) {
   //   res.json(user);
   // });
 
-  let message = 'Reading a user by id';
+  let message = 'Reading a user by id: ' + req.params.userId;
   res.send(message);
   console.log(message);
   var msg = log.showDate();
@@ -58,7 +58,7 @@ router.put('/:userId', function(req, res) {
   //   res.json(user);
   // });
 
-  let message = 'Updating a user';
+  let message = 'Updating a user id: ' + req.params.userId;
   res.send(message);
   console.log(message);
   var msg = log.showDate();
@@ -74,7 +74,7 @@ router.delete('/:userId', function(req, res) {
   //   res.json({ message: 'user successfully deleted' });
   // });
 
-  let message = 'Deleting a user by id';
+  let message = 'Deleting a user by id: ' + req.params.userId;
   res.send(message);
   console.log(message);
   var msg = log.showDate();
