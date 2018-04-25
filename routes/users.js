@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 router.use(function timeLog(req, res, next) {
-  console.log('Time: ', Date.now());
   next();
 });
 
@@ -18,6 +17,7 @@ router.get('/', function(req, res) {
   let message = 'Listing all users';
   res.send(message);
   console.log(message);
+  console.log('');
 });
 
 router.post('/', function(req, res) {
@@ -31,6 +31,7 @@ router.post('/', function(req, res) {
   let message = 'Creating a user';
   res.send(message);
   console.log(message);
+  console.log('');
 });
 
 router.get('/:userId', function(req, res) {
@@ -43,6 +44,7 @@ router.get('/:userId', function(req, res) {
   let message = 'Reading a user by id';
   res.send(message);
   console.log(message);
+  console.log('');
 });
 
 router.put('/:userId', function(req, res) {
@@ -55,6 +57,7 @@ router.put('/:userId', function(req, res) {
   let message = 'Updating a user';
   res.send(message);
   console.log(message);
+  console.log('');
 });
 
 router.delete('/:userId', function(req, res) {
@@ -69,6 +72,7 @@ router.delete('/:userId', function(req, res) {
   let message = 'Deleting a user by id';
   res.send(message);
   console.log(message);
+  console.log('');
 });
 
 module.exports = router;
