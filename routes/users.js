@@ -1,36 +1,29 @@
 var express = require('express');
 var router = express.Router();
 var log = require('./../common/log');
+var fs = require('fs');
+var usersDbFile = 'db/users.json';
 
 router.use(function timeLog(req, res, next) {
   next();
 });
 
 router.get('/', function(req, res) {
-  // let usersArray = sessionStorage.getItem('users') ? sessionStorage.getItem('users') : [];
-  
-  // sessionStorage.find({}, function(err, user) {
-  //   if (err)
-  //   res.send(err);
-  //   res.json(user);
-  // });
+  var usersData = JSON.parse(fs.readFileSync(usersDbFile, 'utf8'));
+  res.send(usersData);
 
   let message = 'Listing all users';
-  res.send(message);
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
 });
 
 router.post('/', function(req, res) {
-  // var new_user = new sessionStorage(req.body);
-  // new_user.save(function(err, user) {
-  //   if (err)
-  //   res.send(err);
-  //   res.json(user);
-  // });
+  var usersData = JSON.parse(fs.readFileSync(usersDbFile, 'utf8'));
+  usersData.push(req.body);
+  fs.writeFileSync(usersDbFile, JSON.stringify(usersData) , 'utf-8');
 
-  let message = 'Creating a user';
+  let message = 'Creating a user: ' + JSON.stringify(req.body);
   res.send(message);
   console.log(message);
   var msg = log.showDate();
