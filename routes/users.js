@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var log = require('./../common/log');
+var mysqlConnection = require('./common/db-connection');
 
 router.use(function timeLog(req, res, next) {
   next();
