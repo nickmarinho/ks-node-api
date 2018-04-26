@@ -1,84 +1,114 @@
 var express = require('express');
+var mongoose = require("mongoose");
 var router = express.Router();
 var log = require('./../common/log');
+var Schema = mongoose.Schema;
+
+var usersDataSchema = new Schema({
+  id: Number,
+  name: String,
+  email: String,
+  homePhone: String,
+  cellPhone: String,
+  password: String
+}, {
+	collection: 'usersData'
+});
+
+var usersData = mongoose.model('usersData', usersDataSchema);
+
+mongoose.connect('mongodb://localhost:27017/ks-node-api');
 
 router.use(function timeLog(req, res, next) {
   next();
 });
 
 router.get('/', function(req, res) {
-  // let usersArray = sessionStorage.getItem('users') ? sessionStorage.getItem('users') : [];
-  
-  // sessionStorage.find({}, function(err, user) {
-  //   if (err)
-  //   res.send(err);
-  //   res.json(user);
-  // });
+  usersData.find({}, function(err, result) {
+		if (err) throw err;
+		if (result) {
+			res.json(result);
+		} else {
+			res.send(JSON.stringify({
+				error : 'Error'
+			}));
+		}
+	});
 
   let message = 'Listing all users';
-  res.send(message);
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
 });
 
 router.post('/', function(req, res) {
-  // var new_user = new sessionStorage(req.body);
-  // new_user.save(function(err, user) {
-  //   if (err)
-  //   res.send(err);
-  //   res.json(user);
-  // });
-
-  let message = 'Creating a user';
-  res.send(message);
-  console.log(message);
-  var msg = log.showDate();
-  console.log('', msg);
+  var userDataConnect = new usersData(req.body);
+  userDataConnect.save().then(item => {
+    let message = 'Creating a user: ' + JSON.stringify(req.body);
+    res.send(message);
+    console.log(message);
+    var msg = log.showDate();
+    console.log('', msg);
+  })
+  .catch(err => {
+    res.status(400).send("Unable to save user to the database");
+  });
 });
 
 router.get('/:userId', function(req, res) {
-  // sessionStorage.findById(req.params.userId, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json(user);
-  // });
+  var userId = req.params.userId;
 
-  let message = 'Reading a user by id: ' + req.params.userId;
-  res.send(message);
-  console.log(message);
-  var msg = log.showDate();
-  console.log('', msg);
+  usersData.find({ id: userId }, function(err, result) {
+		if (err) throw err;
+		if (result) {
+			res.json(result);
+      let message = 'Reading a user by id: ' + userId;
+      console.log(message);
+      var msg = log.showDate();
+      console.log('', msg);
+    } else {
+			res.send(JSON.stringify({
+				error : 'Error'
+			}));
+		}
+	});
 });
 
 router.put('/:userId', function(req, res) {
-  // sessionStorage.findOneAndUpdate({_id: req.params.userId}, req.body, {new: true}, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json(user);
-  // });
+  var userId = req.params.userId;
+  
+  var newValues = {
+    $set: {
+      id: req.body.id,
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+      homePhone: req.body.homePhone,
+      cellPhone: req.body.cellPhone
+    }
+  };
 
-  let message = 'Updating a user id: ' + req.params.userId;
-  res.send(message);
-  console.log(message);
-  var msg = log.showDate();
-  console.log('', msg);
+  usersData.updateOne({ "id": userId }, newValues, function(err, result){
+    if(err) throw err;
+    let message = 'Updating a user id: ' + userId;
+    res.send(message);
+    console.log(message);
+    var msg = log.showDate();
+    console.log('', msg);
+  });
 });
 
 router.delete('/:userId', function(req, res) {
-  // sessionStorage.remove({
-  //   _id: req.params.userId
-  // }, function(err, user) {
-  //   if (err)
-  //     res.send(err);
-  //   res.json({ message: 'user successfully deleted' });
-  // });
+  var userId = req.params.userId;
 
-  let message = 'Deleting a user by id: ' + req.params.userId;
-  res.send(message);
-  console.log(message);
-  var msg = log.showDate();
-  console.log('', msg);
+  usersData.deleteOne({ "id": userId }, function(err, result) {
+    if(err) throw err;    
+    let message = 'Deleting a user by id: ' + userId;
+    res.send(message);
+    console.log(message);
+    var msg = log.showDate();
+    console.log('', msg);
+  });
 });
 
 module.exports = router;
