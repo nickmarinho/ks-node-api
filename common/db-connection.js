@@ -7,4 +7,6 @@ var mysqlConnection = mysql.createConnection({
   database: "ks-node-api"
 });
 
+mysqlConnection.connect();
+
 module.exports = mysqlConnection;
