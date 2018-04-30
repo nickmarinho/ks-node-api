@@ -22,13 +22,17 @@ router.get('/', function(req, res) {
 router.get('/:userId', function(req, res) {
   var usersData = fs.readFileSync(usersDbFile, 'utf8') ? JSON.parse(fs.readFileSync(usersDbFile, 'utf8')) : [];
   var userId = req.params.userId;
-  var userData = getUserById(usersData, userId);
-  res.send(userData);
 
-  let message = 'Reading a user by id: ' + userId;
-  console.log(message);
-  var msg = log.showDate();
-  console.log('', msg);
+  for (var d = 0, len = usersData.length; d < len; d += 1) {
+    if (Number(usersData[d].id) === Number(userId)) {
+      res.send(usersData[d]);
+
+      let message = 'Reading a user by id: ' + userId;
+      console.log(message);
+      var msg = log.showDate();
+      console.log('', msg);
+    }
+  }  
 });
 
 router.post('/', function(req, res) {
@@ -103,13 +107,5 @@ router.delete('/:userId', function(req, res) {
   var msg = log.showDate();
   console.log('', msg);
 });
-
-var getUserById = function(usersData, userId) {
-  for (var d = 1, len = usersData.length; d < len; d += 1) {
-    if (Number(usersData[d].id) === Number(userId)) {
-      return usersData[d];
-    }
-  }
-}
 
 module.exports = router;
