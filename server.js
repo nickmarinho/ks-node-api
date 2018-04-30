@@ -5,6 +5,9 @@ var app = express();
 var bodyParser = require('./common/body-parser');
 app.use(bodyParser);
 
+var cors = require('cors');
+app.use(cors);
+
 var home = require('./routes/home');
 app.use('/', home);
 
