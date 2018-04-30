@@ -3,6 +3,7 @@ var mongoose = require("mongoose");
 var router = express.Router();
 var log = require('./../common/log');
 var Schema = mongoose.Schema;
+var bcrypt = require('bcryptjs');
 
 var usersDataSchema = new Schema({
   id: Number,
@@ -41,20 +42,6 @@ router.get('/', function(req, res) {
   console.log('', msg);
 });
 
-router.post('/', function(req, res) {
-  var userDataConnect = new usersData(req.body);
-  userDataConnect.save().then(item => {
-    let message = 'Creating a user: ' + JSON.stringify(req.body);
-    res.send(message);
-    console.log(message);
-    var msg = log.showDate();
-    console.log('', msg);
-  })
-  .catch(err => {
-    res.status(400).send("Unable to save user to the database");
-  });
-});
-
 router.get('/:userId', function(req, res) {
   var userId = req.params.userId;
 
@@ -74,6 +61,21 @@ router.get('/:userId', function(req, res) {
 	});
 });
 
+router.post('/', function(req, res) {
+  req.body.password = bcrypt.hashSync(req.body.password);
+  var userDataConnect = new usersData(req.body);
+  userDataConnect.save().then(item => {
+    let message = 'Creating a user: ' + JSON.stringify(req.body);
+    res.send(message);
+    console.log(message);
+    var msg = log.showDate();
+    console.log('', msg);
+  })
+  .catch(err => {
+    res.status(400).send("Unable to save user to the database");
+  });
+});
+
 router.put('/:userId', function(req, res) {
   var userId = req.params.userId;
   
@@ -82,7 +84,7 @@ router.put('/:userId', function(req, res) {
       id: req.body.id,
       name: req.body.name,
       email: req.body.email,
-      password: req.body.password,
+      password: bcrypt.hashSync(req.body.password),
       homePhone: req.body.homePhone,
       cellPhone: req.body.cellPhone
     }
@@ -96,6 +98,27 @@ router.put('/:userId', function(req, res) {
     var msg = log.showDate();
     console.log('', msg);
   });
+});
+
+router.post('/authenticate', function(req, res) {
+  usersData.find({ email: req.body.email }, function(err, result) {
+		if (err) throw err;
+		if (result) {
+      if(bcrypt.compareSync(req.body.password, result.password)) {
+        res.status(200).send({ auth: true });
+        var msg = log.showDate();
+        console.log('', msg);
+      } else {
+        res.status(401).send('Failed to authenticate.');
+        var msg = log.showDate();
+        console.log('', msg);
+      } 
+    } else {
+      res.status(404).send('No user found.');
+      var msg = log.showDate();
+      console.log('', msg);
+		}
+	});
 });
 
 router.delete('/:userId', function(req, res) {
