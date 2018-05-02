@@ -66,7 +66,7 @@ router.post('/', function(req, res) {
   var userDataConnect = new usersData(req.body);
   userDataConnect.save().then(item => {
     let message = 'Creating a user: ' + JSON.stringify(req.body);
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
@@ -93,7 +93,7 @@ router.put('/:userId', function(req, res) {
   usersData.updateOne({ "id": userId }, newValues, function(err, result){
     if(err) throw err;
     let message = 'Updating a user id: ' + userId;
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
@@ -127,7 +127,7 @@ router.delete('/:userId', function(req, res) {
   usersData.deleteOne({ "id": userId }, function(err, result) {
     if(err) throw err;    
     let message = 'Deleting a user by id: ' + userId;
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
