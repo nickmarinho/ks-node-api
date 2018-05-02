@@ -42,7 +42,7 @@ router.post('/', function(req, res) {
   fs.writeFileSync(usersDbFile, JSON.stringify(usersData) , 'utf-8');
 
   let message = 'Creating a user: ' + JSON.stringify(req.body);
-  res.send(message);
+  res.status(200).send({ success: true, message: message });
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
@@ -62,7 +62,7 @@ router.put('/:userId', function(req, res) {
   }
 
   let message = 'Updating a user id: ' + userId;
-  res.send(message);
+  res.status(200).send({ success: true, message: message });
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
@@ -112,7 +112,7 @@ router.delete('/:userId', function(req, res) {
   }
 
   let message = 'Deleting a user by id: ' + userId;
-  res.send(message);
+  res.status(200).send({ success: true, message: message });
   console.log(message);
   var msg = log.showDate();
   console.log('', msg);
