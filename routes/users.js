@@ -41,7 +41,7 @@ router.post('/', function(req, res) {
   mysqlConnection.query(sql, function (err, result, fields) {
     if (err) throw err;
     let message = 'Creating a user: ' + sql;
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
@@ -62,7 +62,7 @@ router.put('/:userId', function(req, res) {
   mysqlConnection.query(sql, function (err, result, fields) {
     if (err) throw err;
     let message = 'Updating a user id: ' + req.params.userId;
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
@@ -95,7 +95,7 @@ router.delete('/:userId', function(req, res) {
   mysqlConnection.query("DELETE FROM usersData WHERE id='" + req.params.userId + "'", function (err, result, fields) {
     if (err) throw err;
     let message = 'Deleting a user by id: ' + req.params.userId;
-    res.send(message);
+    res.status(200).send({ success: true, message: message });
     console.log(message);
     var msg = log.showDate();
     console.log('', msg);
