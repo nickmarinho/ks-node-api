@@ -63,6 +63,7 @@ router.get('/:userId', function(req, res) {
 
 router.post('/', function(req, res) {
   req.body.password = bcrypt.hashSync(req.body.password);
+  req.body.id = Number(usersData.length) + 1;
   var userDataConnect = new usersData(req.body);
   userDataConnect.save().then(item => {
     let message = 'Creating a user: ' + JSON.stringify(req.body);
