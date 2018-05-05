@@ -20,6 +20,9 @@ app.use(bodyParser);
 var home = require('./routes/home');
 app.use('/', home);
 
+var logs = require('./routes/logs');
+app.use('/logs', logs);
+
 var users = require('./routes/users');
 app.use('/users', users);
 
