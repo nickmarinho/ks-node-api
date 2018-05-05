@@ -38,7 +38,7 @@ router.get('/:userId', function(req, res) {
 router.post('/', function(req, res) {
   var usersData = fs.readFileSync(usersDbFile, 'utf8') ? JSON.parse(fs.readFileSync(usersDbFile, 'utf8')) : [];
   req.body.password = bcrypt.hashSync(req.body.password);
-  req.body.id = usersData.length;
+  req.body.id = Number(usersData.length) + 1;
   usersData.push(req.body);
   fs.writeFileSync(usersDbFile, JSON.stringify(usersData) , 'utf-8');
 
