@@ -19,6 +19,32 @@ router.get('/', function(req, res) {
   console.log('', msg);
 });
 
+router.get('/:page', function(req, res) {
+  var users = fs.readFileSync(usersDbFile, 'utf8') ? JSON.parse(fs.readFileSync(usersDbFile, 'utf8')) : [];
+
+  var totalUsers = users.length,
+      pageSize = 10,
+      pageCount = totalUsers/pageSize,
+      currentPage = req.params.page ? Number(req.params.page) : 1,
+      usersArrays = [], 
+      usersList = [];
+
+  //split list into groups
+  while (users.length > 0) {
+    usersArrays.push(users.splice(0, pageSize));
+  }
+
+  //show list of users from group
+  usersList = usersArrays[Number(currentPage) - 1];
+
+  res.send(usersList);
+
+  let message = 'Listing page: ' + currentPage + ' of users';
+  console.log(message);
+  var msg = log.showDate();
+  console.log('', msg);
+});
+
 router.get('/:userId', function(req, res) {
   var usersData = fs.readFileSync(usersDbFile, 'utf8') ? JSON.parse(fs.readFileSync(usersDbFile, 'utf8')) : [];
   var userId = req.params.userId;

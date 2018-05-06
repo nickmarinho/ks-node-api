@@ -18,6 +18,32 @@ router.get('/', function(req, res) {
   console.log('', msg);
 });
 
+router.get('/:page', function(req, res) {
+  var logs = fs.readFileSync(logsDbFile, 'utf8') ? JSON.parse(fs.readFileSync(logsDbFile, 'utf8')) : [];
+
+  var totalLogs = logs.length,
+      pageSize = 10,
+      pageCount = totalLogs/pageSize,
+      currentPage = req.params.page ? Number(req.params.page) : 1,
+      logsArrays = [], 
+      logsList = [];
+
+  //split list into groups
+  while (logs.length > 0) {
+    logsArrays.push(logs.splice(0, pageSize));
+  }
+
+  //show list of logs from group
+  logsList = logsArrays[Number(currentPage) - 1];
+
+  res.send(logsList);
+
+  let message = 'Listing page: ' + currentPage + ' of logs';
+  console.log(message);
+  var msg = log.showDate();
+  console.log('', msg);
+});
+
 router.post('/', function(req, res) {
   var logsData = fs.readFileSync(logsDbFile, 'utf8') ? JSON.parse(fs.readFileSync(logsDbFile, 'utf8')) : [];
   logsData.push(req.body);
