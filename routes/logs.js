@@ -22,7 +22,7 @@ router.get('/:page', function(req, res) {
   var logs = fs.readFileSync(logsDbFile, 'utf8') ? JSON.parse(fs.readFileSync(logsDbFile, 'utf8')) : [];
 
   var totalLogs = logs.length,
-      pageSize = 10,
+      pageSize = 5,
       pageCount = totalLogs/pageSize,
       currentPage = req.params.page ? Number(req.params.page) : 1,
       logsArrays = [], 

@@ -23,7 +23,7 @@ router.get('/:page', function(req, res) {
   var users = fs.readFileSync(usersDbFile, 'utf8') ? JSON.parse(fs.readFileSync(usersDbFile, 'utf8')) : [];
 
   var totalUsers = users.length,
-      pageSize = 10,
+      pageSize = 5,
       pageCount = totalUsers/pageSize,
       currentPage = req.params.page ? Number(req.params.page) : 1,
       usersArrays = [], 
@@ -36,7 +36,7 @@ router.get('/:page', function(req, res) {
 
   //show list of users from group
   usersList = usersArrays[Number(currentPage) - 1];
-
+  
   res.send(usersList);
 
   let message = 'Listing page: ' + currentPage + ' of users';
