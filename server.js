@@ -26,6 +26,15 @@ app.use('/logs', logs);
 var users = require('./routes/users');
 app.use('/users', users);
 
+var vehicles = require('./routes/vehicles');
+app.use('/vehicles', vehicles);
+
+var swaggerUi = require('swagger-ui-express');
+var swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/v1', router);
+
 var port = process.env.PORT || 3000;
 app.listen(port);
 
